@@ -1,0 +1,152 @@
+:root {
+    --width: 90vw;
+    --heigth: 90vh;
+    /*se tiene 6 filas más parte superior e inferior*/
+    --rows: 7;
+    --columns: 7;
+    --lado-cuadrado-h: calc(var(--heigth) / var(--rows));
+    --lado-cuadrado-w: calc(var(--width) / var(--columns));
+    --radio-circulo-h: calc(var(--lado-cuadrado-h) - 3vh);
+    --radio-circulo-w: calc(var(--lado-cuadrado-w) - 3vh);
+
+}
+
+
+.dam-game {
+    width: max(var(--width),700px);
+    height: var(--heigth);
+    min-width: 700px;
+    min-height: 600px;
+   /* box-sizing: border-box;*/
+    border: 1px solid black;
+    margin: 0 auto;
+    font-size: 1.5em; /* Texto grande */
+ 
+}
+.scene1toscene2:hover {
+    cursor: grab;
+}
+
+
+
+
+
+.scene {
+    width: max(var(--width),700px);
+    height: var(--heigth);
+    visibility: hidden;
+    display: none;
+   
+}
+.active {
+    visibility: visible;
+    display: block;
+}
+
+
+
+#scene1 {
+    /*background-color: aqua;*/
+}
+
+#scene2 {
+    /* background-color: green;*/
+     display:grid;
+     grid-template-areas: "configheader configheader"
+                          "configplayer1 configplayer2"
+                          "configfooter configfooter";
+                          
+     grid-template-columns: 1fr 1fr;
+     grid-template-rows: 0.5fr 10fr 1fr;
+     border: 2px solid black;
+     box-sizing: border-box;
+     height: 100%;
+     width: 100%;
+}
+#configheader{
+    grid-area: configheader;
+    text-align: center;
+   /* background-color: red;*/
+   
+}
+#configplayer1{
+    grid-area: configplayer1;
+   /* background-color: yellow;*/
+    box-sizing: border-box;
+    /*margin:2vw;*/
+    padding: 1vh;
+    
+}
+#configplayer2{
+    grid-area: configplayer2;
+   /* background-color: blue;*/
+    box-sizing: border-box;
+   /* margin:2vw;*/
+    padding: 1vh;
+}
+#configfooter{
+    grid-area: configfooter;
+   /* background-color: red;*/
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    /*height: 100%;*/
+    gap:max(2vh,20px) max(2vh,20px);
+   /* margin: 1vw;*/
+}
+#imageList1, #imageList2{
+    display:flex;
+    margin: 0 auto;
+    flex-wrap:wrap;
+    width:100%;
+   
+    justify-content:center;
+  }
+  #imageList1 img, #imageList2 img{
+    
+    width:25%;
+    height:15vh;
+    box-sizing: border-box;
+    object-fit: contain;
+    
+  }
+  #imageList1 img:hover, #imageList2 img:hover{
+    
+   border: 2px solid black;
+    
+  }
+  #buttonAceptarConfiguracion, #buttonResetConfiguracion{
+    font-size: 24px; /* Texto grande */
+    padding: 20px 40px; /* Más espacio dentro del botón */
+    border: none;
+    /*box-sizing: border-box;
+    margin: 1vh;*/
+    border-radius: 10px;
+    background-color: #007bff;
+    color: white;
+    cursor: pointer;
+    transition: background 0.3s;
+  }
+  #buttonAceptarConfiguracion:disabled{
+    background-color: gray;
+  }
+  /*#buttonAceptarConfiguracion:hover{
+    background-color: #0056b3;
+  }*/
+  .confignombre{
+    display: flex;
+    /*flex-direction: column;*/
+    align-items: center;
+    gap: 1vh;
+  }
+
+#scene3 {
+    /* background-color: yellow;*/
+}
+
+#scene4 {
+    background-color: gray;
+}
+
+
+
