@@ -1,0 +1,104 @@
+:root{
+    --rows: 20;
+    --columns: 20;
+    --lado-cuadrado-h: calc(var(--heigth) / var(--rows));
+    --lado-cuadrado-w: calc(var(--width) / var(--columns));
+    --radio-circulo-h: calc(var(--lado-cuadrado-h) );//- 3vh);
+    --radio-circulo-w: calc(var(--lado-cuadrado-w) ); //- 3vh);
+
+}
+#goBoard {
+    display: grid;
+    grid-template-columns: 2fr 5fr 2fr;
+    grid-template-rows: 1fr 6fr;
+    grid-template-areas: "menu menu menu"
+                        "infoplayer1 board infoplayer2";
+
+}
+.imagenPlayer {
+    box-sizing: border-box;
+    padding: 1vw;
+
+}
+.imagenPlayer img{
+    object-fit: scale-down;
+
+    max-height: 150px;
+}
+#infoPlayer1, #infoPlayer2 {
+
+    width:100%;
+    height: 100%;
+    background-color: orange;
+    text-align: center;
+    justify-content: center;
+}
+#infoPlayer2 {
+    grid-area: infoplayer2;
+}
+#infoPlayer1{
+    grid-area: infoplayer1;
+}
+
+#goBoardMenu{
+    grid-area: menu;
+    width: 100%;
+    background-color: red;
+}
+#board{
+    grid-area: board;
+    width: 100%;
+    height: 100%;
+}
+
+.row {
+    display: flex;
+    justify-content: center;
+    height: var(--lado-cuadrado-h);
+    width: 100%;
+    box-sizing: border-box;
+    /*border:1px solid orange;*/
+}
+
+.cell {
+    /* para que sea cuadrado */
+    width: min(var(--lado-cuadrado-h), var(--lado-cuadrado-w));
+    box-sizing: content-box;
+    background: blue;
+    border:1px solid orange;
+}
+
+.circle {
+
+    height: 100%; /*min(var(--radio-circulo-h), var(--radio-circulo-w));*/
+    box-sizing: content-box;
+    border-radius: 50%;
+   /* margin: 0.5vh;*/
+
+}
+
+.circle_start {
+    position: relative;
+    top: calc(  var(--heigth));
+    left: -200px;
+    background-color: green;
+    transition: top 4s;
+}
+
+.circle_playerOne {
+    /* background-color: yellow;*/
+     background-size: cover;
+    background-color: white;
+    border-radius: 50%;
+
+
+}
+
+.circle_playerTwo {
+    /*0background-image: url(https://erikstore.com/blog/wp-content/uploads/2024/10/Vegeta-Nino.jpg);*/
+    background-size: cover;
+    border-radius: 50%;
+    background-color: white;
+
+
+}
