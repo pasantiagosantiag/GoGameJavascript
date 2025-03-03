@@ -11,8 +11,8 @@
     display: grid;
     grid-template-columns: 2fr 5fr 2fr;
     grid-template-rows: 1fr 6fr;
-    grid-template-areas: "menu menu menu"
-                        "infoplayer1 board infoplayer2";
+    grid-template-areas:"infoplayer1 board infoplayer2"
+                        "menu menu menu";
 
 }
 .imagenPlayer {
@@ -29,7 +29,9 @@
 
     width:100%;
     height: 100%;
-    background-color: orange;
+    box-sizing: border-box;
+    border: 1px solid black;
+   /* background-color: orange;*/
     text-align: center;
     justify-content: center;
 }
@@ -43,7 +45,7 @@
 #goBoardMenu{
     grid-area: menu;
     width: 100%;
-    background-color: red;
+   /* background-color: red;*/
 }
 #board{
     grid-area: board;
@@ -59,13 +61,30 @@
     box-sizing: border-box;
     /*border:1px solid orange;*/
 }
+#resetBoard, #printBoard, #evalBoard{
+   /* font-size: 100%; /* Texto grande */
+    padding: 10px 20px; /* Más espacio dentro del botón */
+    border: none;
+    /*box-sizing: border-box;
+    margin: 1vh;*/
+    border-radius: 10px;
 
+    color: white;
+    cursor: pointer;
+    transition: background 0.3s;
+}
+#resetBoard{
+    background-color: #007bff;
+}
+#printBoard{
+    background-color: #28a745;
+}
 .cell {
     /* para que sea cuadrado */
     width: min(var(--lado-cuadrado-h), var(--lado-cuadrado-w));
-    box-sizing: content-box;
-    background: blue;
-    border:1px solid orange;
+    box-sizing: border-box;
+  /*  background: blue;*/
+    border:1px solid black;
 }
 
 .circle {
@@ -76,27 +95,30 @@
    /* margin: 0.5vh;*/
 
 }
-
+/*
 .circle_start {
     position: relative;
     top: calc(  var(--heigth));
     left: -200px;
     background-color: green;
     transition: top 4s;
-}
+}*/
 
-.circle_playerOne {
+.circle_playerOne, .circle_playerTwo {
     /* background-color: yellow;*/
      background-size: cover;
+    border:1px solid gray;
+   /* background-color: white;
+    border-radius: 50%;*/
+}
+.circle_playerOne{
+    background-color:black;
+}
+.circle_playerTwo{
     background-color: white;
-    border-radius: 50%;
+}
+.red{
+    border: 2px solid red;
 }
 
-.circle_playerTwo {
-    /*0background-image: url(https://erikstore.com/blog/wp-content/uploads/2024/10/Vegeta-Nino.jpg);*/
-    background-size: cover;
-    border-radius: 50%;
-    background-color: white;
 
-
-}
