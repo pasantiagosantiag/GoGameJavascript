@@ -10,12 +10,13 @@ class GoBoard extends Scene {
     #scoreplayer2 = null
     #rows = 19
     #cols = 19
-
+    #sound=null;
     //0 negras 1 blancas
     #turn = 0
 
     constructor(container, next) {
         super(container, next)
+
         this._options = {
             player1: {
                 name: "Player 1",
@@ -26,6 +27,7 @@ class GoBoard extends Scene {
                 url: "./images/musculman.jpg",
             }
         }
+        this.#sound=container.querySelector(".song");
         //se construye una matriz de rows x colums
         this.#board = Array.from({length: this.#rows}, () => Array(this.#cols).fill(null));
         //configurar el boton de reset
@@ -105,6 +107,64 @@ class GoBoard extends Scene {
         this.#scoreplayer1.innerHTML = score[0]
         this.#scoreplayer2.innerHTML = score[1]
     }
+    #evalCell(row, column, vecinos_color) {
+        var atrapado = true
+        let vecinos_nuevos = []
+        var color = this.#getColor(this.#board[row][column])
+        //en el momento que existe una libre se para
+        for (var i = -1; i <= 1 && atrapado; i++)
+            for (var j = -1; j <= 1 && atrapado; j++) {
+                //solo la de la izquierda, derecha, arriba y abajo que se encuentren entre los ímites
+                if ((Math.abs(i) + Math.abs(j) == 1) && row + i >= 0 && row + i < this.#rows - 1 && column + j >= 0 && column + j < this.#cols - 1) {
+                    if (this.#isEmpty(this.#board[row + i][column + j])) {
+                        atrapado = false
+                    } else {
+                        //se añade para evaluar si es necesario las que son del mismo color
+                        if (this.#getColor(this.#board[row + i][column + j]) == color) {
+                            //falta comprobar que no estan en la lista
+                            var coords = [row + i, column + j]
+                            if (!vecinos_color.some(([x, y]) => x === coords[0] && y === coords[1])) {
+                                vecinos_nuevos.push(coords)
+
+                            }
+                        }
+                    }
+                }
+            }
+        this.#board[row][column].childNodes[0].classList.add("red")
+        //nuevas celdas evaluadas
+        let nuevos = []
+        if (atrapado) {
+            //esta rodeado por al meno uno de los suyos que se tiene que evaluar para ver
+            //si tiene escapatoria
+            if (vecinos_nuevos.length > 0) {
+                //alguno esta libre
+                for (var i = 0; i < vecinos_nuevos.length; i++) {
+                    var cell = vecinos_nuevos[i]
+                    //llamada recursiva
+                    var libre = this.#evalCell(cell[0], cell[1], vecinos_color.concat([cell]))
+                    if (libre.length == 0) {
+                        atrapado = false
+                        return []
+                    } else {
+                        //se añade a los conectados
+                        nuevos = nuevos.concat(libre)
+
+                    }
+                }
+                //en este punto no se ha encontrado nada libre, se añaden y se devuelven
+                //si llega a la llamada principal, se cambia de color
+                var mergedArray = [...new Set([...vecinos_nuevos, ...vecinos_color, ...nuevos])]
+                return mergedArray //vecinos_color.concat(nuevos).concat(vecinos_nuevos)
+            } else {
+                //no existe ningun vecino y está atrapado, se devuelve el mismo
+                return vecinos_color
+            }
+        }
+        //no esta atrapado
+        return []
+    }
+
 
     /**
      * devuelve un vector de 2 elementos con indice 0 -> negras, 1 blancas
@@ -134,70 +194,11 @@ class GoBoard extends Scene {
     }
 
     #getColor(cell) {
-    console.log(cell.childNodes)
+
         if (cell.childNodes[0].classList.contains("circle_playerOne"))
             return CellColor.BLACK
         else
             return CellColor.WHITE
-    }
-
-    #evalCell(row, column, vecinos_color) {
-        var atrapado = true
-        let vecinos_nuevos = []
-        var color = this.#getColor(this.#board[row][column])
-        //en el momento que existe una libre se para
-        for (var i = -1; i <= 1 && atrapado; i++)
-            for (var j = -1; j <= 1 && atrapado; j++) {
-                //solo la de la izquierda, derecha, arriba y abajo que se encuentren entre los ímites
-                if ((Math.abs(i) + Math.abs(j) == 1) && row + i >= 0 && row + i < this.#rows - 1 && column + j >= 0 && column + j < this.#cols - 1) {
-
-                    if (this.#isEmpty(this.#board[row + i][column + j])) {
-                        atrapado = false
-                    } else {
-                        //se añade para evaluar si es necesario las que son del mismo color
-                        if (this.#getColor(this.#board[row + i][column + j]) == color) {
-                            //falta comprobar que no estan en la lista
-                            var coords = [row + i, column + j]
-                            if (!vecinos_color.some(([x, y]) => x === coords[0] && y === coords[1])) {
-                                vecinos_nuevos.push(coords)
-
-                            }
-                        }
-                    }
-                }
-            }
-        this.#board[row][column].childNodes[0].classList.add("red")
-        //nuevas celdas evaluadas
-        let nuevos = []
-        if (atrapado) {
-            //esta rodeado por al meno uno de los suyos que se tiene que evaluar para ver
-            //si tiene escapatoria
-            if (vecinos_nuevos.length > 0) {
-                //alguno esta libre
-                for (var i = 0; i < vecinos_nuevos.length; i++) {
-                    var cell = vecinos_nuevos[i]
-
-                    var libre = this.#evalCell(cell[0], cell[1], vecinos_color.concat([cell]))
-                    if (libre.length == 0) {
-                        atrapado = false
-                        return []
-                    } else {
-                        //se añade a los conectados
-                        nuevos = nuevos.concat(libre)
-
-                    }
-                }
-                //en este punto no se ha encontrado nada libre, se añaden y se devuelven
-                //si llega a la llamada principal, se cambia de color
-                var mergedArray = [...new Set([...vecinos_nuevos, ...vecinos_color, ...nuevos])]
-                return mergedArray //vecinos_color.concat(nuevos).concat(vecinos_nuevos)
-            } else {
-                //no existe ningun vecino y está atrapado, se devuelve el mismo
-                return vecinos_color
-            }
-        }
-        //no esta atrapado
-        return []
     }
 
 
@@ -323,10 +324,15 @@ class GoBoard extends Scene {
     start() {
         this.#reset()
         this.#createBoard();
+        if(this.#sound!=null){
+            this.#sound.play();
+        }
     }
 
     stop() {
-
+        if(this.#sound!=null){
+            this.#sound.pause();
+        }
     }
 
     restart() {

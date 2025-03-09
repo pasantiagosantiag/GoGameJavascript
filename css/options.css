@@ -3,7 +3,15 @@
 
     height: 100%;
     width: 100%;
+   /* background-image: url("/imgs/torneo.jpg");
+    background-repeat: no-repeat;
+    background-size: cover;
+    background-position: center;
+    background-color: rgba(0, 0, 0, 0.5);
+    background-blend-mode: darken;*/
+
 }
+
 #config  > div{
     display:grid;
     grid-template-areas: "configheader configheader"
@@ -20,7 +28,12 @@
 #configheader{
     grid-area: configheader;
     text-align: center;
-    /* background-color: red;*/
+
+    /*background-color: aqua;*/
+    background-image: url("/imgs/logo.png");
+    background-repeat: no-repeat;
+    background-size: contain;
+    background-position: center;
 
 }
 #configplayer1{
@@ -47,28 +60,44 @@
     /*height: 100%;*/
     gap:max(2vh,20px) max(2vh,20px);
     /* margin: 1vw;*/
+
+
 }
 #imageList1, #imageList2{
     display:flex;
-    margin: 0 auto;
+    margin: 1vh auto;
     flex-wrap:wrap;
     width:100%;
 
 
+
     justify-content:center;
+}
+#imageList1{
+
 }
 #imageList1 img, #imageList2 img{
 
-    width:25%;
+    width:23%;
+
     height:15vh;
     box-sizing: border-box;
     object-fit: contain;
+    background-color: white;
+    margin:4px;
+    border:1px solid gray;
 
 }
 #imageList1 img:hover, #imageList2 img:hover{
 
     border: 2px solid black;
 
+}
+#buttonResetConfiguracion{
+    background-color: orange;
+}
+#buttonAceptarConfiguracion{
+    background-color:#007bff;
 }
 #buttonAceptarConfiguracion, #buttonResetConfiguracion{
     font-size: 24px; /* Texto grande */
@@ -77,7 +106,7 @@
     /*box-sizing: border-box;
     margin: 1vh;*/
     border-radius: 10px;
-    background-color: #007bff;
+
     color: white;
     cursor: pointer;
     transition: background 0.3s;
@@ -90,7 +119,7 @@
 }*/
 .confignombre{
     display: flex;
-    /*flex-direction: column;*/
+    flex-direction: column;
     align-items: center;
-    gap: 1vh;
+    /*gap: 1vh;*/
 }

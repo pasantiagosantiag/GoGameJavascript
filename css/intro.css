@@ -1,4 +1,14 @@
 
-#intro {
+#introsvg {
     /*background-color: aqua;*/
+    background-image: url("/imgs/personajes.png");
+background-repeat: no-repeat;
+    background-size: cover;
+    background-position: center;
+}
+text, .scene1toscene2 {
+
+}
+#gointro{
+    color:red;
 }

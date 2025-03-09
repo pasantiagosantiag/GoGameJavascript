@@ -258,3 +258,237 @@ se ejecuta el código de la clase  Game)
 No destacan en nada, simplemente un SVG con un botón para ir al siguiente.
 
 ## Clase Options
+
+En esta escena se seleccion el nombre de cada jugador y la imagen de la ficha (usando comunicación con el exterior y haciendo uso de servicios externos).
+Posee los siguientes métodos privados:
+
+- #createList: Realizar una petición a https://dragonball-api.com, a partir del json devuelto crea los elementos HTML y los configura (eventos...)
+- #selectImg1: Al hacer click sobre una imagen creada en #createList deselecciona  la anterior y selecciona la nueva, cambiado el estilo CSS
+- #selectImg2: Igual que el método anterior pero con el segundo jugador
+- #reset: Borra los nombres y las imágenes seleccionadas
+- #enableNext: Activa el botón de siguiente si los jugadores han puesto el nombre y han seleccionado una imagen
+
+E implementa los dos métodos abstractos
+
+- start
+- stop
+
+En el constructor se le pasan 2 parámetros:
+
+- El contenedor
+- El método que se ejecutar al pulsar siguiente, que actualiza el nombre y la imagen de los usuarios
+
+```js
+ constructor(container, next) {
+        super(container, next)
+        this.#fieldName1 = container.querySelector("#fieldname1")
+        this.#fieldName1.addEventListener("keyup", this.#enableNext)
+        this.#fieldName2 = container.querySelector("#fieldname2")
+        this.#fieldName2.addEventListener("keyup", this.#enableNext)
+        this.#imageList1 = container.querySelector("#imageList1")
+        this.#imageList2 = container.querySelector("#imageList2")
+        this.#buttonNext = container.querySelector("#buttonAceptarConfiguracion")
+        this.#sound=container.querySelector(".song");
+        this.#buttonNext.addEventListener("click",()=>{
+            var options={
+                player1: {
+                    name: this.#fieldName1.value,
+                    url: this.#imageURL1.src,
+                },
+                player2: {
+                    name: this.#fieldName2.value,
+                    url: this.#imageURL2.src,
+                },
+            }
+            this._next(options)
+        });
+        ....
+```
+Al usarlo:
+
+```js
+...
+   case "config":
+                    scene = new Option(child, (options) => {
+                        this.#dataplayer1 = options.player1
+                        this.#dataplayer2 = options.player2
+                        this.next()
+                    })
+                    break;
+...
+```
+Destacan el método #createList:
+
+```js
+ #createList() {
+        fetch("https://dragonball-api.com/api/characters?page=1&limit=10")
+            .then((response) => response.json())
+            .then((data) => {
+                for (var i = 0; i < data.meta.itemCount; i++) {
+                    var img1 = document.createElement("img");
+                    img1.src = data.items[i].image;
+                    img1.addEventListener("click", this.#selectImg1)
+                    imageList1.appendChild(img1);
+                    var img2 = document.createElement("img");
+                    img2.src = data.items[i].image;
+                    imageList2.appendChild(img2);
+                    img2.addEventListener("click", this.#selectImg2)
+                }
+            });
+    }
+```
+Se obtiene el texto, se pasa Json, recorriendo los elementos, en cada iteración se crea las 2 imágenes y se añaden a los cntenedores, estableciendo
+el evento al hacer click (es un método de la clase)
+
+
+## Clase GoBoard
+
+El juego propiamente, posee un tabler de 19x19 en el que se van colocando las fichas. Hereda, al igual que el resto de las escenas de la clase Scene e immplementa
+los métodos abstractos.
+
+Los atributos  más destacados son son:
+
+- #board: Privado, es una matriz con el estado del tablero 0 vacia 1 jugador 1, 2 jugador 2
+- _options: Opciones de configuración, el nombre y la imagen de cada jugador
+- #turn: Booleano con el turno del jugador actual
+
+De los métodos:
+
+- #CreateBoard(). Crea el tablero creando filas y para cada fila columnas, de tipo div
+```js
+ #createBoard()
+{
+    var nodo;
+    //se crea la fina
+    for (var i = 0; i < this.#rows; i++) {
+        var row = document.createElement("div")
+        row.classList.add("row")
+        document.getElementById("board").appendChild(row)
+        //se crean las columnas
+        for (var j = 0; j < this.#cols; j++) {
+            nodo = this.#createNode()
+            //se almacena para ser evaluado
+            this.#board[i][j] = nodo
+            row.appendChild(nodo)
+        }
+
+    }
+}
+```
+
+En el método anterior se llama al método createNode, que crea una celda, el contenido del método es:
+
+```js
+ #createNode() {
+        var nodo = document.createElement("div")
+        nodo.classList.add("cell")
+        nodo.addEventListener("click", (event) => {
+            var node = event.target
+            //evita que se coloque en una que ya tiene una ficha
+            if (!node.classList.contains("circle")) {
+                var circle = document.createElement("div")
+                circle.classList.add("circle")
+                if (this.getTurn()) {
+                    circle.style.backgroundImage = "url('" + this._options.player1.url + "')";
+                    circle.classList.add("circle_playerOne")
+
+                } else {
+                    circle.style.backgroundImage = "url('" + this._options.player2.url + "')";
+                    circle.classList.add("circle_playerTwo")
+                }
+                //cambio de turno y añadir al elemento
+                this.toggleTurn();
+                node.appendChild(circle)
+            }
+
+        })
+        return nodo
+    }
+```
+Crea un nodo con clase cell (CSS), añadiendose un esuchador de eventos.
+
+Otro punto destacado es la evaluación del tablero, que evalua si se ha atrapado alguna ficha de uno u otro jugador, usando un método recursivo, evalCell:
+
+```js
+    #evalBoard() {
+        for (var i = 0; i < this.#rows; i++) {
+            for (var j = 0; j < this.#cols; j++) {
+                if (this.#board[i][j] != null && !this.#isEmpty(this.#board[i][j])) {
+                    var resultado = this.#evalCell(i, j, [[i, j]])
+                    console.log(resultado)
+                    //si devuelve una lista con algún elemento, se cambia de color
+                    if (resultado.length > 0) {
+                        resultado.forEach((coord) => {
+                            this.#clearCell(coord[0], coord[1])
+                        })
+                    }
+                }
+
+            }
+        }
+        var score = this.#countBoard();
+        this.#scoreplayer1.innerHTML = score[0]
+        this.#scoreplayer2.innerHTML = score[1]
+    }
+    #evalCell(row, column, vecinos_color) {
+        var atrapado = true
+        let vecinos_nuevos = []
+        var color = this.#getColor(this.#board[row][column])
+        //en el momento que existe una libre se para
+        for (var i = -1; i <= 1 && atrapado; i++)
+            for (var j = -1; j <= 1 && atrapado; j++) {
+                //solo la de la izquierda, derecha, arriba y abajo que se encuentren entre los ímites
+                if ((Math.abs(i) + Math.abs(j) == 1) && row + i >= 0 && row + i < this.#rows - 1 && column + j >= 0 && column + j < this.#cols - 1) {
+                    if (this.#isEmpty(this.#board[row + i][column + j])) {
+                        atrapado = false
+                    } else {
+                        //se añade para evaluar si es necesario las que son del mismo color
+                        if (this.#getColor(this.#board[row + i][column + j]) == color) {
+                            //falta comprobar que no estan en la lista
+                            var coords = [row + i, column + j]
+                            if (!vecinos_color.some(([x, y]) => x === coords[0] && y === coords[1])) {
+                                vecinos_nuevos.push(coords)
+
+                            }
+                        }
+                    }
+                }
+            }
+        this.#board[row][column].childNodes[0].classList.add("red")
+        //nuevas celdas evaluadas
+        let nuevos = []
+        if (atrapado) {
+            //esta rodeado por al meno uno de los suyos que se tiene que evaluar para ver
+            //si tiene escapatoria
+            if (vecinos_nuevos.length > 0) {
+                //alguno esta libre
+                for (var i = 0; i < vecinos_nuevos.length; i++) {
+                    var cell = vecinos_nuevos[i]
+                    //llamada recursiva
+                    var libre = this.#evalCell(cell[0], cell[1], vecinos_color.concat([cell]))
+                    if (libre.length == 0) {
+                        atrapado = false
+                        return []
+                    } else {
+                        //se añade a los conectados
+                        nuevos = nuevos.concat(libre)
+
+                    }
+                }
+                //en este punto no se ha encontrado nada libre, se añaden y se devuelven
+                //si llega a la llamada principal, se cambia de color
+                var mergedArray = [...new Set([...vecinos_nuevos, ...vecinos_color, ...nuevos])]
+                return mergedArray //vecinos_color.concat(nuevos).concat(vecinos_nuevos)
+            } else {
+                //no existe ningun vecino y está atrapado, se devuelve el mismo
+                return vecinos_color
+            }
+        }
+        //no esta atrapado
+        return []
+    }
+
+```
+Para evaluar una celda se miran la posiciones (si es posible): arriba, abajo, izquierda y derecha, si alguna es del mismo color y no está en la lista se añade a una lista.
+En caso de estar rodeado se devuelve la celda, en caso de no estar atrapado lista vacia, y si algun vecino es del mismo color y no se ha evaluado se evalua para ver si existe una escapatoria.
+

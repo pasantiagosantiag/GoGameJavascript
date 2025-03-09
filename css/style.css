@@ -1,10 +1,25 @@
+@font-face {
+    font-family: 'Saiyan Sans';
+
+    font-weight: normal;
+    font-style: normal;
+
+    src: url("/fonts/Saiyan-Sans.ttf") format('truetype');
+
+}
 :root {
     --width: 90vw;
     --heigth: 90vh;
     /*se tiene 6 filas más parte superior e inferior*/
-
+    font-family: 'Saiyan Sans', sans-serif;
+    font-size: 40px;
+    color: #FFA500; /* Naranja brillante */
+    text-shadow: 4px 4px 0px #000, 6px 6px 5px rgba(0, 0, 0, 0.5);
+    letter-spacing: 2px;
+    text-transform: uppercase;
 
 }
+
 
 
 .dam-game {
@@ -16,7 +31,8 @@
     border: 1px solid black;
     margin: 0 auto;
     font-size: 1.5em; /* Texto grande */
- 
+
+
 }
 .scene1toscene2:hover {
     cursor: grab;

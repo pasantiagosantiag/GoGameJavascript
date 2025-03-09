@@ -41,7 +41,6 @@ class Option extends Scene {
         fetch("https://dragonball-api.com/api/characters?page=1&limit=10")
             .then((response) => response.json())
             .then((data) => {
-
                 for (var i = 0; i < data.meta.itemCount; i++) {
                     var img1 = document.createElement("img");
                     img1.src = data.items[i].image;
@@ -56,8 +55,8 @@ class Option extends Scene {
     }
     #selectImg1 = () => {
         if (this.#imageURL1 != null) {
-            console.log(this.#imageURL1)
-            this.#imageURL1.style.border = "none"
+
+            this.#imageURL1.style.border = ""
         }
         this.#imageURL1 = this.#imageList1.querySelector("img:hover")
         this.#imageList1.querySelector("img:hover").style.border = "solid 2px red"
@@ -65,8 +64,8 @@ class Option extends Scene {
     }
     #selectImg2 = () => {
         if (this.#imageURL2 != null) {
-            console.log(this.#imageURL2)
-            this.#imageURL2.style.border = "none";
+
+            this.#imageURL2.style.border = "";
         }
         this.#imageURL2 = this.#imageList2.querySelector("img:hover")
         this.#imageList2.querySelector("img:hover").style.border = "solid 2px red"

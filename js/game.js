@@ -30,7 +30,7 @@ class Game {
                         this.next()
                     })
                     break;
-                case "goBoard":
+                case "boardContainer":
                     scene = new GoBoard(child, this.next, {
                         player1: this.#dataplayer1,
                         player2: this.#dataplayer2,
