@@ -213,7 +213,7 @@ class Game {
 ```
 En la página HTML se tiene las diferentes etiquetas con las escenas ( *se puede hacer de muchas formas distintas, en este caso es para prácticar la selecciñon de nodos DOM*):
 
-```html=
+```html
 <!DOCTYPE html>
 <html lang="es">
 
@@ -249,3 +249,12 @@ En la página HTML se tiene las diferentes etiquetas con las escenas ( *se puede
         <audio class="song">
 ...
 ```
+
+Por ejemplo, para crear la escena intro se obtiene el nodo con id intro y se pasa al constructor de la clase Intro, junto con la función lamda de siguiente (se llama dentro de la escena, de forma que 
+se ejecuta el código de la clase  Game)
+
+## Clases Intro y End
+
+No destacan en nada, simplemente un SVG con un botón para ir al siguiente.
+
+## Clase Options
