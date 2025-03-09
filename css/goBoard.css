@@ -79,6 +79,9 @@
 #printBoard{
     background-color: #28a745;
 }
+#evalBoard{
+    background-color: #ffc107;
+}
 .cell {
     /* para que sea cuadrado */
     width: min(var(--lado-cuadrado-h), var(--lado-cuadrado-w));

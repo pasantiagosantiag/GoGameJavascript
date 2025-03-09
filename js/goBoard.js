@@ -90,6 +90,7 @@ class GoBoard extends Scene {
             for (var j = 0; j < this.#cols; j++) {
                 if (this.#board[i][j] != null && !this.#isEmpty(this.#board[i][j])) {
                     var resultado = this.#evalCell(i, j, [[i, j]])
+                    console.log(resultado)
                     //si devuelve una lista con algún elemento, se cambia de color
                     if (resultado.length > 0) {
                         resultado.forEach((coord) => {

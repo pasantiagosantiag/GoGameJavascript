@@ -1,4 +1,4 @@
-class Intro extends Scene {
+class End extends Scene {
     //atributos de la escena
     #sound = null
     //constructor
@@ -7,8 +7,8 @@ class Intro extends Scene {
         super(container, next)
         //obteniendo elementos del DOM necesarios para la escena
         //configuración de escuchadores de eventos y asociarlos a métodos internos de la clase
-        var portada = container.querySelector("#portada");
-        var boton_scene1_toscene2 = container.querySelector("#boton_scene1_toscene2");
+        var portada = container.querySelector("#final");
+        var boton_scene1_toscene2 = container.querySelector("#boton_scene4_toscene1");
         boton_scene1_toscene2.addEventListener("click", this._next);
         //inicio del sonido
         this.#sound = container.querySelector(".song");
